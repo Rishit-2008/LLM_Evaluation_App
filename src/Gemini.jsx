@@ -6,26 +6,17 @@ const genAI = new GoogleGenerativeAI(apiKey);
 
 export const fetchResponse = async (input) => {
   try {
-    
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-pro",
-      generationConfig: {
-        temperature: 0.7,
-        topK: 1,
-        topP: 0.8,
-        maxOutputTokens: 500,
-      }
-    });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // Generate content
-    const result = await model.generateContent(input);
+    const result = await model.generateContent([input]);
     const response = await result.response;
-    
-    if (!response.text()) {
-      throw new Error('Empty response from Gemini API');
+    const text = response.text();
+
+    if (!text) {
+      throw new Error("Empty response from Gemini API");
     }
 
-    return response.text();
+    return text;
   } catch (error) {
     console.error("Error fetching Gemini response:", error);
     throw new Error(`Gemini Error: ${error.message}`);
