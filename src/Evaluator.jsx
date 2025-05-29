@@ -1,16 +1,16 @@
 import axios from 'axios';
 
-const apiKey = "open_ai_api_key";
+const apiKey = "openai_key";
 
 export const evaluateResponse = async (responses) => {
   const evaluationPrompt = `
 Please evaluate these AI responses objectively:
 
 Response A:
-${responses.Gemini}
+${responses["Gemini 1.5 Flash"]}
 
 Response B:
-${responses.GPT}
+${responses["GPT 3.5 Turbo"]}
 
 Compare these responses based on:
 1. Accuracy and factual correctness
@@ -51,14 +51,12 @@ Provide:
     );
 
     const evaluationText = result.data.choices[0].message.content;
-    
-    
     const lastLine = evaluationText.split('\n').filter(line => line.trim()).pop();
-    const betterResponse = lastLine.includes('A') ? 'Gemini' : 'GPT';
+    const betterResponse = lastLine.includes('A') ? 'Gemini 1.5 Flash' : 'GPT 3.5 Turbo';
     
     return {
       bestResponse: responses[betterResponse],
-      bestLLM: betterResponse === 'GPT' ? 'GPT 3.5' : 'Gemini Pro',
+      bestLLM: betterResponse,
       evaluation: evaluationText
     };
   } catch (error) {
